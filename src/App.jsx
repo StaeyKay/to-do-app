@@ -6,6 +6,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 const App = () => {
   const [list, setList] = useState(false);
   const [task, setTask] = useState("");
+  const [taskList, setTaskList] = useState([]);
 
   const saveTask = async (e) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ const App = () => {
         <h5 className="py-2">Professional</h5>
       </div>
       <article className="p-10 space-y-4">
-        <form action="">
+        <form action="" onSubmit={saveTask}>
           <div className="flex">
             <input
               className="w-[92%] bg-[#F1ECE6] rounded-l-full py-2 px-4 border-none"
@@ -49,37 +50,33 @@ const App = () => {
           </div>
         </form>
         <section className="bg-[#F1ECE6] px-4 rounded-2xl">
-          <div className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]">
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                className="bg-[#F1ECE6] text-[#D98326]"
-                onChange={() => toggleList()}
-              />
-              <span
-                style={{
-                  textDecoration: list ? "line-through" : "none",
-                }}
+          {taskList.map((task, index) => {
+            return (
+              <div
+                key={index}
+                className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]"
               >
-                Personal work No. 1
-              </span>
-            </div>
-            <div className="flex">
-              <MdDeleteOutline size={23} />
-              <FiEdit2 size={21} />
-            </div>
-          </div>
-          <div className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]">
-            <div className="flex gap-2">
-              <input type="checkbox" />
-              <h3>Personal work No. 1</h3>
-            </div>
-            <div className="flex">
-              <MdDeleteOutline size={23} />
-              <FiEdit2 size={21} />
-            </div>
-          </div>
-          <hr />
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    className="bg-[#F1ECE6] text-[#D98326]"
+                    onChange={() => toggleList()}
+                  />
+                  <span
+                    style={{
+                      textDecoration: list ? "line-through" : "none",
+                    }}
+                  >
+                    Personal work No. 1
+                  </span>
+                </div>
+                <div className="flex">
+                  <MdDeleteOutline size={23} />
+                  <FiEdit2 size={21} />
+                </div>
+              </div>
+            );
+          })}
         </section>
       </article>
     </div>
