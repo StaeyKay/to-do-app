@@ -2,13 +2,24 @@ import React, { useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { addTask } from "./utils";
 
 const App = () => {
   const [list, setList] = useState(false);
   const [task, setTask] = useState("");
+  const [title, setTitle] = useState("");
 
   const saveTask = async (e) => {
     e.preventDefault();
+
+    try {
+      const data = {
+        title
+      }
+      const tasks = await addTask(data)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const toggleList = () => {
@@ -29,19 +40,19 @@ const App = () => {
         <h5 className="py-2">Professional</h5>
       </div>
       <article className="p-10 space-y-4">
-        <form action="">
+        <form action="" onSubmit={saveTask}>
           <div className="flex">
             <input
               className="w-[92%] bg-[#F1ECE6] rounded-l-full py-2 px-4 border-none"
               type="text"
               onChange={(e) => {
-                setTask(e.target.value);
+                console.log(e.target.value)
+                setTitle(e.target.value);
               }}
-              value={task}
+              value={title}
               placeholder="What do you need to do?"
             />
             <button
-              onSubmit={saveTask}
               className="bg-[#76B7CD] text-white rounded-r-full py-2 px-4 md:w-[8%]"
             >
               ADD
@@ -69,16 +80,7 @@ const App = () => {
               <FiEdit2 size={21} />
             </div>
           </div>
-          <div className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]">
-            <div className="flex gap-2">
-              <input type="checkbox" />
-              <h3>Personal work No. 1</h3>
-            </div>
-            <div className="flex">
-              <MdDeleteOutline size={23} />
-              <FiEdit2 size={21} />
-            </div>
-          </div>
+          
           <hr />
         </section>
       </article>
