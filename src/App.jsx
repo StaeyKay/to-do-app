@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
 import { FaRegCheckCircle } from "react-icons/fa";
-import { addTask } from "./utils";
+import { addTask, getTasks } from "./utils";
 
 const App = () => {
-  const [list, setList] = useState(false);
-  const [task, setTask] = useState("");
+  const [lineThrough, setLineThrough] = useState(false);
+  const [taskList, setTaskList] = useState([]);
   const [title, setTitle] = useState("");
 
   const saveTask = async (e) => {
@@ -15,15 +15,28 @@ const App = () => {
     try {
       const data = {
         title
-      }
-      const tasks = await addTask(data)
+      };
+      const tasks = await addTask(data);
+      setTitle("");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const toggleList = () => {
-    setList(!list);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const allTasks = await getTasks();
+        setTaskList(allTasks);
+      } catch (error) {
+        console.log("Error fetching tasks:", error)
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const toggleLineThrough = () => {
+    setLineThrough(!lineThrough);
   };
   return (
     <div>
@@ -46,42 +59,40 @@ const App = () => {
               className="w-[92%] bg-[#F1ECE6] rounded-l-full py-2 px-4 border-none"
               type="text"
               onChange={(e) => {
-                console.log(e.target.value)
+                console.log(e.target.value);
                 setTitle(e.target.value);
               }}
               value={title}
               placeholder="What do you need to do?"
             />
-            <button
-              className="bg-[#76B7CD] text-white rounded-r-full py-2 px-4 md:w-[8%]"
-            >
+            <button className="bg-[#76B7CD] text-white rounded-r-full py-2 px-4 md:w-[8%]">
               ADD
             </button>
           </div>
         </form>
         <section className="bg-[#F1ECE6] px-4 rounded-2xl">
-          <div className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]">
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                className="bg-[#F1ECE6] text-[#D98326]"
-                onChange={() => toggleList()}
-              />
-              <span
-                style={{
-                  textDecoration: list ? "line-through" : "none",
-                }}
-              >
-                Personal work No. 1
-              </span>
+          {taskList.map((task, index) => (
+            <div key={index} className="flex justify-between p-3 border-b-[0.1px] border-b-[#76B7CD]">
+              <div className="flex gap-2">
+                <input
+                  type="checkbox"
+                  className="bg-[#F1ECE6] text-[#D98326]"
+                  onChange={() => toggleLineThrough()}
+                />
+                <span
+                  style={{
+                    textDecoration: lineThrough ? "line-through" : "none",
+                  }}
+                >
+                  {task.title}
+                </span>
+              </div>
+              <div className="flex">
+                <MdDeleteOutline size={23} />
+                <FiEdit2 size={21} />
+              </div>
             </div>
-            <div className="flex">
-              <MdDeleteOutline size={23} />
-              <FiEdit2 size={21} />
-            </div>
-          </div>
-          
-          <hr />
+          ))}
         </section>
       </article>
     </div>

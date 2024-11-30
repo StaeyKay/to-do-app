@@ -21,5 +21,6 @@ export async function getTasks () {
     });
 
     const response = await tasksResponse.json();
+    console.log("response:", response)
     return response
 }
